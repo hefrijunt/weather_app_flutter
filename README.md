@@ -13,8 +13,6 @@ A simple and modern weather application built using **Flutter**, designed to dis
 - 🌡️ Weather details:
   - Temperature  
   - Weather condition  
-  - Humidity  
-  - Wind speed  
 - 🖥️ Responsive and clean UI  
 - ⚡ State management using **Bloc**
 
@@ -37,7 +35,7 @@ Clone repository:
 ```bash
 git clone git@github.com:hefrijunt/weather_app_flutter.git
 cd weather_app_flutter
-
+```
 ---
 ## 📸 Screenshots
 
