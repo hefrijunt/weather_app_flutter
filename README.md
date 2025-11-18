@@ -1,16 +1,51 @@
-# weather_app
+# 📱 Weather App Flutter
 
-A new Flutter project.
+A simple and modern weather application built using **Flutter**, designed to display real-time weather information based on user location or selected cities. This project uses a clean UI, dynamic greetings, and integrates with a weather API for up-to-date data.
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+## 🚀 Features
 
-A few resources to get you started if this is your first Flutter project:
+- 🌤️ Real-time weather display  
+- 📍 Fetch weather by GPS location  
+- 🏙️ Fetch weather by manual city search  
+- 👋 Dynamic greeting based on time (morning/afternoon/evening/night)  
+- 🌡️ Weather details:
+  - Temperature  
+  - Weather condition  
+  - Humidity  
+  - Wind speed  
+- 🖥️ Responsive and clean UI  
+- ⚡ State management using **Bloc**
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+---
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## 🛠️ Tech Stack
+
+- **Flutter (Dart)**
+- **Bloc / Cubit** for state management
+- **HTTP package**
+- **OpenWeatherMap API**
+- **Geolocator** (optional for GPS)
+
+---
+
+## 🔧 Installation
+
+Clone repository:
+
+```bash
+git clone git@github.com:hefrijunt/weather_app_flutter.git
+cd weather_app_flutter
+
+---
+## 📸 Screenshots
+
+Add your app screenshots here (optional).
+
+## 👤 Author
+
+Hefri Juanto
+Weather App Flutter Project
+(learning by Romain Girou Youtube Channel)
+https://youtu.be/MMq4wkeHkPc
