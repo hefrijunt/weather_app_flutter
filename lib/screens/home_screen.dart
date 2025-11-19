@@ -4,6 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart' show DateFormat;
 import 'package:weather_app/bloc/weather_bloc_bloc.dart';
+import 'package:weather_app/widgets/sun_image.dart';
+import 'package:weather_app/widgets/temp_image.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -13,6 +15,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  // Weather Icon based on condition code
   Widget getWeatherIcon(int code) {
     switch (code) {
       case > 200 && < 300:
@@ -84,7 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
 
-          /// Blur Layer, tidak menutupi UI
+          /// Blur Layer, makes the colors blend smoothly
           BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 120, sigmaY: 120),
             child: Container(color: Colors.transparent),
@@ -172,142 +175,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       const SizedBox(height: 25),
 
                       /// Sunrise & Sunset
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Image.asset('assets/11.png', scale: 8),
-                              const SizedBox(width: 5),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Sunrise',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                  SizedBox(height: 3),
-                                  Text(
-                                    DateFormat().add_jm().format(
-                                      state.weather.sunrise!,
-                                    ),
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Image.asset('assets/12.png', scale: 8),
-                              const SizedBox(width: 5),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Sunset',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                  SizedBox(height: 3),
-                                  Text(
-                                    DateFormat().add_jm().format(
-                                      state.weather.sunset!,
-                                    ),
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                      SunImageWidget(),
 
-                      const SizedBox(height: 15),
+                      const SizedBox(height: 5),
                       const Divider(color: Colors.grey),
 
                       /// Temp Min & Max
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Image.asset('assets/13.png', scale: 8),
-                              const SizedBox(width: 5),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Temp Min',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                  SizedBox(height: 3),
-                                  Text(
-                                    "${state.weather.tempMin!.celsius!.round()} °C",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Image.asset('assets/14.png', scale: 8),
-                              const SizedBox(width: 5),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Temp Max',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                  SizedBox(height: 3),
-                                  Text(
-                                    "${state.weather.tempMax!.celsius!.round()} °C",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                      TempImage(),
                     ],
-                  );
-                } else if (state is WeatherBlocFailure) {
-                  return const Center(
-                    child: Text(
-                      'Failed to fetch weather data. Please check your API key and internet connection.',
-                      style: TextStyle(color: Colors.white, fontSize: 18),
-                      textAlign: TextAlign.center,
-                    ),
                   );
                 } else {
                   return const Center(
@@ -323,7 +198,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-// GREETING FUNCTION
+// Gretting function based on current time
 String getGreeting() {
   final hour = DateTime.now().hour;
 
