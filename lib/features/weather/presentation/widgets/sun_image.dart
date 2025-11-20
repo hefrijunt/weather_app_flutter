@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weather_app/bloc/weather_bloc_bloc.dart';
+import 'package:intl/intl.dart';
+import 'package:weather_app/features/weather/logic/weather_bloc_bloc.dart';
 
-class TempImage extends StatelessWidget {
-  const TempImage({super.key});
+class SunImageWidget extends StatelessWidget {
+  const SunImageWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,20 +19,20 @@ class TempImage extends StatelessWidget {
           children: [
             Row(
               children: [
-                Image.asset('assets/13.png', scale: 8),
+                Image.asset('assets/11.png', scale: 8),
                 const SizedBox(width: 5),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Temp Min',
+                      'Sunrise',
                       style: TextStyle(color: Colors.white, fontSize: 16),
                     ),
                     SizedBox(height: 3),
                     Text(
-                      "${state.weather.tempMin!.celsius!.round()} °C",
+                      DateFormat().add_jm().format(state.weather.sunrise!),
                       style: TextStyle(
-                        color: const Color.fromARGB(255, 255, 255, 255),
+                        color: Colors.white,
                         fontSize: 18,
                         fontWeight: FontWeight.w500,
                       ),
@@ -42,18 +43,18 @@ class TempImage extends StatelessWidget {
             ),
             Row(
               children: [
-                Image.asset('assets/14.png', scale: 8),
+                Image.asset('assets/12.png', scale: 8),
                 const SizedBox(width: 5),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Temp Max',
+                      'Sunset',
                       style: TextStyle(color: Colors.white, fontSize: 16),
                     ),
                     SizedBox(height: 3),
                     Text(
-                      "${state.weather.tempMax!.celsius!.round()} °C",
+                      DateFormat().add_jm().format(state.weather.sunset!),
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 18,

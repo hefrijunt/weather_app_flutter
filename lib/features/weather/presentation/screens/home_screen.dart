@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart' show DateFormat;
-import 'package:weather_app/bloc/weather_bloc_bloc.dart';
-import 'package:weather_app/widgets/sun_image.dart';
-import 'package:weather_app/widgets/temp_image.dart';
+import 'package:weather_app/features/weather/logic/weather_bloc_bloc.dart';
+import 'package:weather_app/features/weather/presentation/widgets/sun_image.dart';
+import 'package:weather_app/features/weather/presentation/widgets/temp_image.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -15,26 +15,31 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // Weather Icon based on condition code
-  Widget getWeatherIcon(int code) {
-    switch (code) {
-      case > 200 && < 300:
-        return Image.asset('assets/1.png');
-      case > 300 && < 400:
-        return Image.asset('assets/2.png');
-      case > 500 && < 600:
-        return Image.asset('assets/3.png');
-      case > 600 && < 700:
-        return Image.asset('assets/4.png');
-      case > 700 && < 800:
-        return Image.asset('assets/5.png');
-      case 800:
-        return Image.asset('assets/6.png');
-      case > 800 && < 804:
-        return Image.asset('assets/7.png');
-      default:
-        return Image.asset('assets/7.png');
+  Widget _getWeatherIcon(int? code) {
+    if (code == null) {
+      return Image.asset('assets/7.png');
     }
+    if (code >= 200 && code < 300) {
+      return Image.asset('assets/1.png');
+    } else if (code >= 300 && code < 400) {
+      return Image.asset('assets/2.png');
+    } else if (code >= 500 && code < 600) {
+      return Image.asset('assets/8.png');
+    } else if (code >= 600 && code < 700) {
+      return Image.asset('assets/3.png');
+    } else if (code >= 700 && code < 800) {
+      return Image.asset('assets/5.png');
+    } else if (code == 800) {
+      return Image.asset('assets/6.png');
+    } else {
+      return Image.asset('assets/7.png');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<WeatherBlocBloc>().add(const FetchLocation());
   }
 
   @override
@@ -49,10 +54,9 @@ class _HomeScreenState extends State<HomeScreen> {
           statusBarBrightness: Brightness.dark,
         ),
       ),
-
       body: Stack(
         children: [
-          /// BACKGROUND BLUR RADIUS COLORS
+          // Background Blur Colors
           Align(
             alignment: const AlignmentDirectional(3, -0.3),
             child: Container(
@@ -86,8 +90,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
-
-          /// Blur Layer, makes the colors blend smoothly
           BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 120, sigmaY: 120),
             child: Container(color: Colors.transparent),
@@ -96,17 +98,43 @@ class _HomeScreenState extends State<HomeScreen> {
           /// WEATHER CONTENT
           Padding(
             padding: EdgeInsets.fromLTRB(40, kToolbarHeight * 1.4, 40, 20),
+            // Menggunakan BLoC dan State yang sudah direfaktor
             child: BlocBuilder<WeatherBlocBloc, WeatherBlocState>(
               builder: (context, state) {
-                if (state is WeatherBlocSuccess) {
-                  final weather = state.weather;
+                // Menggunakan switch expression untuk menangani semua state
+                return switch (state) {
+                  // KASUS LOADING
+                  WeatherBlocLoading() => const Center(
+                    child: CircularProgressIndicator(color: Colors.white),
+                  ),
 
-                  return ListView(
+                  // KASUS FAILURE
+                  WeatherBlocFailure(message: final errorMessage) => Center(
+                    child: Text(
+                      'Error: $errorMessage',
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: Colors.redAccent,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ),
+
+                  // KASUS INITIAL
+                  WeatherBlocInitial() => const Center(
+                    child: Text(
+                      'Tekan tombol untuk memuat cuaca.',
+                      style: TextStyle(color: Colors.white70),
+                    ),
+                  ),
+
+                  // KASUS SUCCESS
+                  WeatherBlocSuccess(weather: final weatherData) => ListView(
                     padding: EdgeInsets.zero,
                     children: [
                       /// LOCATION
                       Text(
-                        '📍 ${state.weather.areaName}',
+                        '📍 ${weatherData.areaName}',
                         style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w300,
@@ -114,28 +142,27 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
 
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 5),
 
                       /// GREETING
                       Text(
                         getGreeting(),
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 26,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
 
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 5),
 
                       /// WEATHER ICON
-                      // Image.asset('assets/1.png', height: 140),
-                      getWeatherIcon(state.weather.weatherConditionCode!),
+                      _getWeatherIcon(weatherData.weatherConditionCode),
 
                       /// TEMPERATURE
                       Center(
                         child: Text(
-                          '${weather.temperature!.celsius!.round()}°C',
+                          '${weatherData.temperature!.celsius!.round()}°C',
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 55,
@@ -147,7 +174,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       /// CONDITION
                       Center(
                         child: Text(
-                          weather.weatherMain!.toUpperCase(),
+                          weatherData.weatherMain!.toUpperCase(),
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 24,
@@ -163,7 +190,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Text(
                           DateFormat(
                             'EEEE dd -',
-                          ).add_jm().format(state.weather.date!),
+                          ).add_jm().format(weatherData.date!),
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 17,
@@ -175,20 +202,16 @@ class _HomeScreenState extends State<HomeScreen> {
                       const SizedBox(height: 25),
 
                       /// Sunrise & Sunset
-                      SunImageWidget(),
+                      const SunImageWidget(),
 
                       const SizedBox(height: 5),
                       const Divider(color: Colors.grey),
 
                       /// Temp Min & Max
-                      TempImage(),
+                      const TempImage(),
                     ],
-                  );
-                } else {
-                  return const Center(
-                    child: CircularProgressIndicator(color: Colors.white),
-                  );
-                }
+                  ),
+                };
               },
             ),
           ),
@@ -198,10 +221,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-// Gretting function based on current time
 String getGreeting() {
   final hour = DateTime.now().hour;
-
   if (hour >= 4 && hour < 12) {
     return "Good Morning";
   } else if (hour >= 12 && hour < 15) {

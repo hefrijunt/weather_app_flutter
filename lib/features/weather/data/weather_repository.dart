@@ -1,7 +1,7 @@
 import 'package:geolocator/geolocator.dart';
 import 'package:weather/weather.dart';
-import 'package:weather_app/utils/either.dart';
-import 'package:weather_app/utils/failure.dart';
+import 'package:weather_app/core/utils/either.dart';
+import 'package:weather_app/core/utils/failure.dart';
 
 class WeatherRepository {
   Future<Either<Failure, Weather>> fetchWeather(Position pos) async {
