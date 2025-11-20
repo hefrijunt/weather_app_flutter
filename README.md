@@ -6,15 +6,19 @@ A simple and modern weather application built using **Flutter**, designed to dis
 
 ## 🚀 Features
 
-- 🌤️ Real-time weather display  
-- 📍 Fetch weather by GPS location  
-- 🏙️ Fetch weather by manual city search  
-- 👋 Dynamic greeting based on time (morning/afternoon/evening/night)  
-- 🌡️ Weather details:
+- Real-time weather display  
+- Fetch weather by GPS location  
+- Fetch weather by manual city search  
+- Dynamic greeting based on time (morning/afternoon/evening/night)  
+- Weather details:
   - Temperature  
   - Weather condition  
-- 🖥️ Responsive and clean UI  
-- ⚡ State management using **Bloc**
+- Responsive and clean UI  
+- State management using **Bloc**
+
+## 🚀 Improve Architectur
+- Error Handling with Either **Dartz**
+- Handling Bloc State with **Generics** dan **ValueWrapper**
 
 ---
 
